@@ -14,12 +14,15 @@ function setMap(){
         .attr("height", height);
 
     //create Albers equal area conic projection centered on France
-   var projection = d3.geo.albers()
+   var projection = d3.geoAlbers()
         .center([-12.73, 55.42])
         .rotate([-24.45, 1.31, 0])
         .parallels([26.77, 58.96])
         .scale(806.06)
         .translate([width / 2, height / 2]);
+    
+    var path = d3.geoPath()
+        .projection(projection);
     //use d3.queue to parallelize asynchronous data loading
     d3.queue()
         .defer(d3.csv, "data/lab-2.csv") //load attributes from csv
@@ -41,10 +44,10 @@ function setMap(){
         console.log(error);  
         console.log(csvData);
         console.log(europe);
-        //var d3_countries = topojson.feature(europe, europe.objects.d3_countries);
-        //console.log(d3_countries);
+      var d3_countries = topojson.feature(europe, europe.objects.d3_countries);
+        console.log(d3_countries);
            var countries = map.append("path")
-            .datum(europeCountries)
+            .datum(d3_countries)
             .attr("class", "countries")
             .attr("d", path);
     };
